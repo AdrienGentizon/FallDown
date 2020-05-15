@@ -24,7 +24,11 @@ _(I would like to edit all of the material but for the moment I am using some fr
 - Fruit pixel art by _Henry Software_ just [here](https://henrysoftware.itch.io/pixel-food)
 - Background by _me_
 
+**Remerciements:**
+Thank you a lot to _Grafikart_, he is a precious guy to learn a lot of front-end development related stuffs. Make sure to pay a visit to his [site](https://www.grafikart.fr/). His YouTube channel is a [goldmine](https://www.youtube.com/user/grafikarttv).
+
 ---
 
-_Some day I hope to create the \_infamous_ **Le Bureau des tentatives** to host this kind of humble project.
+**One last for the road:**
+Some day I hope to create the _infamous_ **Le Bureau des tentatives** host this kind of humble project.
 Enjoy & Merci.
