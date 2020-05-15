@@ -1,0 +1,30 @@
+**Tile:** _FALL DOWN_
+**Version:** _v0.5b_
+**Author:** _Adrien Gentizon_
+
+---
+
+**Description:**
+This is a _TETRIS_-like game. Coded in JavaScript thanks to _PixiJS_ library.
+I am not aiming of coded it in the most clever way. Yet I try my best at leadt to code
+in a clear and concise way following ES6 style (as far as I know it).
+
+**Techonolgies inside:**
+
+- PixiJS
+- Classes
+- Webpack
+- Babel
+- Sass
+- Git and Github
+
+**Assets used:**
+_(I would like to edit all of the material but for the moment I am using some from other people)_
+
+- Fruit pixel art by _Henry Software_ just [here](https://henrysoftware.itch.io/pixel-food)
+- Background by _me_
+
+---
+
+_Some day I hope to create the \_infamous_ **Le Bureau des tentatives** to host this kind of humble project.
+Enjoy & Merci.
