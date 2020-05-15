@@ -6,7 +6,7 @@
 
 **Description:**
 This is a _TETRIS_-like game. Coded in JavaScript thanks to _PixiJS_ library.
-I am not aiming of coded it in the most clever way. Yet I try my best at leadt to code
+I am not aiming of coded it in the most clever way. Yet I try my best at least to code
 in a clear and concise way following ES6 style (as far as I know it).
 
 **Techonolgies inside:**
@@ -25,10 +25,10 @@ _(I would like to edit all of the material but for the moment I am using some fr
 - Background by _me_
 
 **Remerciements:**
-Thank you a lot to _Grafikart_, he is a precious guy to learn a lot of front-end development related stuffs. Make sure to pay a visit to his [site](https://www.grafikart.fr/). His YouTube channel is a [goldmine](https://www.youtube.com/user/grafikarttv).
+Many thanks to _Grafikart_, he is a precious guy to learn front-end and back-end development related stuffs. Make sure to pay a visit to his [site](https://www.grafikart.fr/). His YouTube channel is a [goldmine](https://www.youtube.com/user/grafikarttv) too.
 
 ---
 
 **One last for the road:**
-Some day I hope to create the _infamous_ **Le Bureau des tentatives** host this kind of humble project.
+Some day I hope to create the _infamous_ **Le Bureau des tentatives** to host this kind of humble project.
 Enjoy & Merci.
