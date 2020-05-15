@@ -1,0 +1,29 @@
+{
+  "name": "fall-down",
+  "version": "0.0.1",
+  "description": "A very humble tetris-like game with PixiJS",
+  "main": ".src/index.js",
+  "scripts": {
+    "test": "mocha --watch",
+    "build": "webpack",
+    "dev": "webpack --watch"
+  },
+  "author": "Adrien GENTIZON",
+  "license": "ISC",
+  "dependencies": {
+    "pixi.js": "^5.2.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/plugin-syntax-class-properties": "^7.8.3",
+    "@babel/preset-env": "^7.9.6",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "css-loader": "^3.5.3",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "style-loader": "^1.2.1",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11"
+  }
+}
