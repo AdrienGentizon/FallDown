@@ -19,12 +19,13 @@ class Game {
     this._keyboard;
     this.app = new pixi.Application(this._options);
 
-    this._timeOver = 2000;
+    this._timeOver = 4000;
     this._minGroupLengthGoal = 3;
     this.speed = 6;
     this._blockWidth = 48;
     this._blockFactory = [];
     this._staticBlocks = [];
+    this._dyingBlocks = [];
     this._movingBlock;
     this._prevPosition = new Vector();
     this._rows;
@@ -91,34 +92,38 @@ class Game {
     };
     this._keyboard.space.press = () => {};
     this._rows = [];
-    for (let n = 0; n < Math.floor(this.h / this._blockWidth); n++) {
-      this._rows[n] = [];
-      for (let k = 0; k < Math.floor(this.w / this._blockWidth); k++) {
-        this._rows[n][k] = { value: -1 };
-      }
-    }
+
+    this._resetRows();
+
     this._newMovingBlock();
     this.state = this.play;
     console.info('GAME ON...');
   }
 
   play(dt) {
-    this._movingBlock.moveY(this.speed * dt);
+    if (this._movingBlock !== undefined) {
+      this._movingBlock.moveY(this.speed * dt);
 
-    for (const block of this._staticBlocks) {
-      this._movingBlock.checkCollisions(block);
-    }
-    this._movingBlock.checkEdges();
-    if (this._movingBlock.isStopped) {
-      this._releaseOneBlock();
-      this._checkLines();
+      for (const block of this._staticBlocks) {
+        this._movingBlock.checkCollisions(block);
+      }
+      this._movingBlock.checkEdges();
+      this._movingBlock.checkBottom();
+
+      // Block stopped by hitting the bottom edge or the top of another bloc
+      if (this._movingBlock.isStopped) {
+        this._staticBlocks.push(this._movingBlock);
+        this._movingBlock = undefined;
+        this._checkLines();
+      }
+    } else {
+      this._moveLines(dt);
     }
   }
 
   gameover(dt) {
     console.info('GAME OVER');
     this.app.ticker.stop();
-    console.debug(this._gpsByRow);
   }
 
   _makeKeyboard() {
@@ -144,10 +149,6 @@ class Game {
     console.info('ASSETS LOADED...');
   }
 
-  _releaseOneBlock() {
-    this._staticBlocks.push(this._movingBlock);
-    this._newMovingBlock();
-  }
   _newMovingBlock() {
     const n = Math.floor(this._blockFactory.length * Math.random());
     this._movingBlock = new Block(new pixi.Sprite(this._blockFactory[n].sprite.texture), this, n);
@@ -155,7 +156,19 @@ class Game {
     this._movingBlock.addTo(this.screen, u);
   }
 
+  _resetRows() {
+    this._rows = [];
+    for (let n = 0; n < Math.floor(this.h / this._blockWidth); n++) {
+      this._rows[n] = [];
+      for (let k = 0; k < Math.floor(this.w / this._blockWidth); k++) {
+        this._rows[n][k] = { value: -1 };
+      }
+    }
+    this._dyingBlocks = [];
+  }
+
   _checkLines() {
+    this._resetRows();
     // Place block.value in a 2D array represneting the tetris grid
     for (const block of this._staticBlocks) {
       this._rows[Math.floor(block.sprite.y / this._blockWidth)][Math.floor(block.sprite.x / this._blockWidth)] = block;
@@ -179,19 +192,54 @@ class Game {
       }
       this._gpsByRow.push(gps);
     }
-    console.log(this._gpsByRow);
 
-    // Delete groups which length is > _minGroupLengthGoal
+    // moving blocks from groups which length is > _minGroupLengthGoal
+    // to _dyingBlocks
     for (const row of this._gpsByRow) {
       for (const group of row) {
-        if (group[0].value >= 0) {
+        if (group[0].value !== -1) {
           if (group.length >= this._minGroupLengthGoal) {
             for (const block of group) {
-              block.kill(this._staticBlocks, this.screen);
+              this._dyingBlocks.push(block);
             }
           }
         }
       }
+    }
+    // deleteing blocks from dyingBlocks
+    for (const block of this._dyingBlocks) {
+      block.kill();
+      this._staticBlocks.splice(this._staticBlocks.indexOf(block), 1);
+    }
+  }
+
+  _moveLines(dt) {
+    let nStopped = 0;
+
+    this._staticBlocks.sort(function (a, b) {
+      return b.sprite.y - a.sprite.y;
+    });
+
+    for (const block of this._staticBlocks) {
+      block.isStopped = false;
+    }
+
+    for (let n = 0; n < this._staticBlocks.length; n++) {
+      const block = this._staticBlocks[n];
+      if (!block.isStopped) {
+        block.moveY(2 * this.speed * dt);
+        block.checkBottom();
+        for (const b of this._staticBlocks) {
+          block.checkCollisions(b);
+        }
+        if (block.isStopped) {
+          nStopped += 1;
+        }
+      }
+    }
+
+    if (nStopped === this._staticBlocks.length) {
+      this._newMovingBlock();
     }
   }
 }

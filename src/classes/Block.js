@@ -23,10 +23,7 @@ class Block {
     this._prevPosition.y = u.y;
   }
 
-  kill(parent) {
-    console.log(parent.indexOf(this));
-
-    this.parent = parent.splice(parent.indexOf(this));
+  kill() {
     for (const container of this._containers) {
       container.removeChild(this.sprite);
     }
@@ -42,22 +39,28 @@ class Block {
     this.sprite.y += pixels;
   }
 
-  checkEdges() {
-    // BOTTOM
+  checkBottom() {
     if (this.sprite.y > this._game.h - this.sprite.height - 48) {
       this.sprite.y = this._game.h - this.sprite.height - 48;
+      // this.sprite.y = this._prevPosition.y;
+
       this.isStopped = true;
     }
-    //SIDES
+  }
+
+  checkEdges() {
     if (this.sprite.x < 0 || this.sprite.x + this.sprite.width > this._game.w) {
       this.sprite.x = this._prevPosition.x;
     }
   }
 
   checkCollisions(block) {
-    if (this.sprite.y > block.sprite.y - this.sprite.height && this.sprite.x == block.sprite.x) {
-      this.sprite.y = block.sprite.y - this.sprite.height;
-      this.isStopped = true;
+    if (block !== this) {
+      if (this.sprite.y > block.sprite.y - this.sprite.height && this.sprite.x == block.sprite.x) {
+        // this.sprite.y = block.sprite.y - this.sprite.height;
+        this.sprite.y = Math.floor(this._prevPosition.y);
+        this.isStopped = true;
+      }
     }
   }
   /*

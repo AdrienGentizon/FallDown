@@ -22,6 +22,7 @@ in a clear and concise way following ES6 style (as far as I know it).
 _(I would like to edit all of the material but for the moment I am using some from other people)_
 
 - Fruit pixel art by _Henry Software_ just [here](https://henrysoftware.itch.io/pixel-food)
+- Font by _CodeMan38_ just [here](https://fonts.google.com/specimen/Press+Start+2P?query=start+2p)
 - Background by _me_
 
 **Remerciements:**
