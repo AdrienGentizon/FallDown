@@ -3,3 +3,5 @@ Coding the HUI with time an score
 Implementing score
 Fixing weird sprite's position when stopped
 Fixing movingLines when it should
+Music of course
+Highscores in WebStorage
