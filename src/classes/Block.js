@@ -9,6 +9,7 @@ class Block {
     this._isStopped = false;
     this._position = new Vector(0, 0);
     this._prevPosition = new Vector(0, 0);
+    this._vertices = [];
     this._containers = [];
 
     if (this._game.DEBUG) {
@@ -38,43 +39,60 @@ class Block {
     container.addChild(this._sprite);
     this.translateX(u.x);
     this.translateY(u.y);
-    // this._sprite.x = u.x;
-    // this._sprite.y = u.y;
-    // this._position.x = Math.floor(u.x);
-    // this._position.y = Math.floor(u.y);
-    // this._prevPosition.x = Math.floor(u.x);
-    // this._prevPosition.y = Math.floor(u.y);
   }
 
   // METHODS
 
-  checkCollisions(block) {
+  checkCollisionsY(block) {
     if (block !== this) {
       if (this._sprite.y > block.sprite.y - this._sprite.height && this._sprite.x == block.sprite.x) {
-        // this._sprite.y = this._prevPosition.y;
-        // this._position.y = Math.floor(this._sprite.y);
-        this.translateY(this._prevPosition.y);
+        this.translateY(this._game.findValidPosition(this._position).y);
         this._isStopped = true;
       }
     }
   }
 
+  checkCollisionsX(block, dir) {
+    if (block !== this) {
+      for (const vertex of this._vertices) {
+        if (
+          Vector.isInside(
+            vertex,
+            block.sprite.x,
+            block.sprite.y,
+            block.sprite.x + block.sprite.width,
+            block.sprite.y + block.sprite.height
+          )
+        ) {
+          this.translateX(this._prevPosition.x);
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
   checkEdges() {
     if (this._sprite.x < 0 || this._sprite.x + this._sprite.width > this._game.w) {
-      // this._sprite.x = this._prevPosition.x;
-      // this._position.x = Math.floor(this._sprite.x);
       this.translateX(this._prevPosition.x);
     }
   }
 
   checkGround() {
     if (this._sprite.y > this._game.groundLevel - this._sprite.height) {
-      // this._sprite.y = this._game.h - this._sprite.height - 48;
-      // this._position.y = Math.floor(this._sprite.y);
-      this.translateY(this._prevPosition.y);
+      this.translateY(this._game.findValidPosition(this._position).y);
 
       this._isStopped = true;
     }
+  }
+
+  computeVertices() {
+    this._vertices = [
+      new Vector(this._sprite.x, this._sprite.y),
+      new Vector(this._sprite.x + this._sprite.width, this._sprite.y),
+      new Vector(this._sprite.x, this._sprite.y + this._sprite.height),
+      new Vector(this._sprite.x + this._sprite.width, this._sprite.y + this._sprite.height),
+    ];
   }
 
   kill() {
@@ -96,24 +114,28 @@ class Block {
     this._prevPosition.x = this._position.x;
     this._sprite.x += dx;
     this._position.x = Math.floor(this._sprite.x);
+    this.computeVertices();
   }
 
   moveY(dy) {
     this._prevPosition.y = this._position.y;
     this._sprite.y += dy;
     this._position.y = Math.floor(this._sprite.y);
+    this.computeVertices();
   }
 
   translateX(x) {
     this._prevPosition.x = this._position.x;
     this._sprite.x = x;
     this._position.x = Math.floor(this._sprite.x);
+    this.computeVertices();
   }
 
   translateY(y) {
     this._prevPosition.y = this._position.y;
     this._sprite.y = y;
     this._position.y = Math.floor(this._sprite.y);
+    this.computeVertices();
   }
 
   // STATIC METHODS
