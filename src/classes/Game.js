@@ -21,7 +21,7 @@ class Game {
     this.app.renderer.autoResize = true;
 
     this.keyboard;
-    this.timeOver = 800;
+    this.timeOver = 2000;
     this.minGroupLengthGoal = 3;
     this.speed = 6;
     this.blockWidth = 48;
@@ -100,6 +100,15 @@ class Game {
     console.info('ASSETS LOADED...');
   }
 
+  findValidPosition(position) {
+    // return a stepped position by blockWidth
+
+    return new Vector(
+      this.blockWidth * Math.floor(position.x / this.blockWidth),
+      this.blockWidth * Math.floor(position.y / this.blockWidth)
+    );
+  }
+
   init() {
     this.app.ticker.add((dt) => {
       this.loop(dt);
@@ -163,7 +172,7 @@ class Game {
         block.moveY(2 * this.speed * dt);
         block.checkGround();
         for (const b of this.staticBlocks) {
-          block.checkCollisions(b);
+          block.checkCollisionsY(b);
         }
         if (block.isStopped) {
           nStopped += 1;
@@ -205,7 +214,7 @@ class Game {
       this.movingBlock.moveY(this.speed * dt);
 
       for (const block of this.staticBlocks) {
-        this.movingBlock.checkCollisions(block);
+        this.movingBlock.checkCollisionsY(block);
       }
       this.movingBlock.checkGround();
 
@@ -224,11 +233,17 @@ class Game {
     this.keyboard.left.press = () => {
       this.movingBlock.moveX(-this.blockWidth);
       this.movingBlock.checkEdges();
+      for (const block of this.staticBlocks) {
+        this.movingBlock.checkCollisionsX(block);
+      }
     };
 
     this.keyboard.right.press = () => {
       this.movingBlock.moveX(this.blockWidth);
       this.movingBlock.checkEdges();
+      for (const block of this.staticBlocks) {
+        this.movingBlock.checkCollisionsX(block);
+      }
     };
     this.keyboard.space.press = () => {};
     this.rows = [];

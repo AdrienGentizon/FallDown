@@ -39,6 +39,19 @@ class Vector {
     return new Vector(vector.x / scalar, vector.y / scalar);
   }
 
+  static isInside(u, ax, ay, bx, by) {
+    /*
+      a-----x
+      |  u  |
+      x-----b
+    */
+    if (u.x >= ax && u.x <= bx && u.y >= ay && u.y <= by) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   toString() {
     return `[Vector: (${this.x}, ${this.y})]`;
   }
