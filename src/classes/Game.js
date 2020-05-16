@@ -21,10 +21,11 @@ class Game {
     this.app.renderer.autoResize = true;
 
     this.keyboard;
-    this.timeOver = 4000;
+    this.timeOver = 800;
     this.minGroupLengthGoal = 3;
     this.speed = 6;
     this.blockWidth = 48;
+    this.groundLevel = this.h - this.blockWidth;
     this.blockFactory = [];
     this.staticBlocks = [];
     this.dyingBlocks = [];
@@ -35,7 +36,7 @@ class Game {
 
     this.makeLayers();
     this.init();
-    this.DEBUG = false;
+    this.DEBUG = true;
   }
 
   checkLines() {
@@ -206,7 +207,6 @@ class Game {
       for (const block of this.staticBlocks) {
         this.movingBlock.checkCollisions(block);
       }
-      this.movingBlock.checkEdges();
       this.movingBlock.checkGround();
 
       // Block stopped by hitting the bottom edge or the top of another bloc
@@ -223,10 +223,12 @@ class Game {
   preparePlay(dt) {
     this.keyboard.left.press = () => {
       this.movingBlock.moveX(-this.blockWidth);
+      this.movingBlock.checkEdges();
     };
 
     this.keyboard.right.press = () => {
       this.movingBlock.moveX(this.blockWidth);
+      this.movingBlock.checkEdges();
     };
     this.keyboard.space.press = () => {};
     this.rows = [];

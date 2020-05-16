@@ -7,11 +7,12 @@ class Block {
     this._game = game;
     this._value = value;
     this._isStopped = false;
+    this._position = new Vector(0, 0);
     this._prevPosition = new Vector(0, 0);
     this._containers = [];
 
     if (this._game.DEBUG) {
-      this.makeDebugShape;
+      this.makeDebugShape();
     }
   }
 
@@ -35,10 +36,14 @@ class Block {
   addTo(container, u = new Vector(100, 0)) {
     this._containers.push(container);
     container.addChild(this._sprite);
-    this._sprite.x = u.x;
-    this._sprite.y = u.y;
-    this._prevPosition.x = u.x;
-    this._prevPosition.y = u.y;
+    this.translateX(u.x);
+    this.translateY(u.y);
+    // this._sprite.x = u.x;
+    // this._sprite.y = u.y;
+    // this._position.x = Math.floor(u.x);
+    // this._position.y = Math.floor(u.y);
+    // this._prevPosition.x = Math.floor(u.x);
+    // this._prevPosition.y = Math.floor(u.y);
   }
 
   // METHODS
@@ -46,7 +51,9 @@ class Block {
   checkCollisions(block) {
     if (block !== this) {
       if (this._sprite.y > block.sprite.y - this._sprite.height && this._sprite.x == block.sprite.x) {
-        this._sprite.y = Math.floor(this._prevPosition.y);
+        // this._sprite.y = this._prevPosition.y;
+        // this._position.y = Math.floor(this._sprite.y);
+        this.translateY(this._prevPosition.y);
         this._isStopped = true;
       }
     }
@@ -54,14 +61,17 @@ class Block {
 
   checkEdges() {
     if (this._sprite.x < 0 || this._sprite.x + this._sprite.width > this._game.w) {
-      this._sprite.x = this._prevPosition.x;
+      // this._sprite.x = this._prevPosition.x;
+      // this._position.x = Math.floor(this._sprite.x);
+      this.translateX(this._prevPosition.x);
     }
   }
 
   checkGround() {
-    if (this._sprite.y > this._game.h - this._sprite.height - 48) {
-      this._sprite.y = this._game.h - this._sprite.height - 48;
-      // this.sprite.y = this._prevPosition.y;
+    if (this._sprite.y > this._game.groundLevel - this._sprite.height) {
+      // this._sprite.y = this._game.h - this._sprite.height - 48;
+      // this._position.y = Math.floor(this._sprite.y);
+      this.translateY(this._prevPosition.y);
 
       this._isStopped = true;
     }
@@ -82,14 +92,28 @@ class Block {
     this._sprite.addChild(this._debugGraphics);
   }
 
-  moveX(pixels) {
-    this._prevPosition.x = this._sprite.x;
-    this._sprite.x += pixels;
+  moveX(dx) {
+    this._prevPosition.x = this._position.x;
+    this._sprite.x += dx;
+    this._position.x = Math.floor(this._sprite.x);
   }
 
-  moveY(pixels) {
-    this._prevPosition.y = this._sprite.y;
-    this._sprite.y += pixels;
+  moveY(dy) {
+    this._prevPosition.y = this._position.y;
+    this._sprite.y += dy;
+    this._position.y = Math.floor(this._sprite.y);
+  }
+
+  translateX(x) {
+    this._prevPosition.x = this._position.x;
+    this._sprite.x = x;
+    this._position.x = Math.floor(this._sprite.x);
+  }
+
+  translateY(y) {
+    this._prevPosition.y = this._position.y;
+    this._sprite.y = y;
+    this._position.y = Math.floor(this._sprite.y);
   }
 
   // STATIC METHODS
