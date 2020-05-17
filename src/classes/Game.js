@@ -136,6 +136,7 @@ class Game {
       space: KeyCodes.SPACE,
       left: KeyCodes.LEFT,
       right: KeyCodes.RIGHT,
+      esc: KeyCodes.ESC,
     });
   }
 

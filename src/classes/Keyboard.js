@@ -5,6 +5,7 @@ class Keyboard {
     RIGHT: 'ArrowRight',
     UP: 'ArrowUp',
     DOWN: 'ArrowDown',
+    ESC: 'Escape',
   };
   constructor(keys) {
     for (const [key, value] of Object.entries(keys)) {

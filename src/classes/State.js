@@ -20,21 +20,25 @@ class Play extends State {
     console.info(this._info);
 
     this._game.keyboard.left.press = () => {
-      this._game.movingBlock.moveX(-this.blockWidth);
+      this._game.movingBlock.moveX(-this._game.blockWidth);
       this._game.movingBlock.checkEdges();
-      for (const block of this.staticBlocks) {
+      for (const block of this._game.staticBlocks) {
         this._game.movingBlock.checkCollisionsX(block);
       }
     };
 
     this._game.keyboard.right.press = () => {
-      this._game.movingBlock.moveX(this.blockWidth);
+      this._game.movingBlock.moveX(this._game.blockWidth);
       this._game.movingBlock.checkEdges();
-      for (const block of this.staticBlocks) {
+      for (const block of this._game.staticBlocks) {
         this._game.movingBlock.checkCollisionsX(block);
       }
     };
     this._game.keyboard.space.press = () => {};
+
+    this._game.keyboard.esc.press = () => {
+      this._game.state = new GameOver(this._container, this._game, 'GAME OVER');
+    };
     this._game.rows = [];
 
     this._game.resetRows();
@@ -63,11 +67,11 @@ class Play extends State {
   }
 
   exit() {
-    this._game.state = new State.GameOver();
+    this._game.state = new GameOver(this._container, this._game, 'GAME OVER');
   }
 }
 
-class GameOver extends Screen {
+class GameOver extends State {
   constructor(container, game = undefined, info = '') {
     super(container, game, info);
   }
