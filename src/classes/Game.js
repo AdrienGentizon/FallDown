@@ -7,6 +7,7 @@ const Keyboard = require('./Keyboard');
 const KeyCodes = Keyboard.KeyCodes;
 const Loader = require('./Loader');
 const Screens = require('./Screens');
+const State = require('./State');
 const Vector = require('./Vector');
 
 class Game {
@@ -119,14 +120,14 @@ class Game {
     new Loader(this.urls, this.dispatchSprites.bind(this));
     document.body.appendChild(this.app.view);
 
-    this.state = this.welcome;
+    this.state = new State.Welcome(this.screen, this, 'FALL_DOWN GAME');
   }
 
   loop(dt) {
     if (this.timeOver < 0) {
       this.state = this.gameover;
     }
-    this.state(dt);
+    this.state.update(dt);
     this.timeOver -= 1;
   }
 
@@ -135,6 +136,7 @@ class Game {
       space: KeyCodes.SPACE,
       left: KeyCodes.LEFT,
       right: KeyCodes.RIGHT,
+      esc: KeyCodes.ESC,
     });
   }
 

@@ -5,3 +5,6 @@ Fixing weird sprite's position when stopped
 Fixing movingLines when it should
 Music of course
 Highscores in WebStorage
+Controls clickable
+Username prompt at welcome screen
+More sprites as blocks
