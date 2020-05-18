@@ -47,6 +47,10 @@ class Play extends State {
   }
 
   update(dt) {
+    if (this._gametimeOver < 0) {
+      this.exit();
+    }
+
     if (this._game.movingBlock !== undefined) {
       this._game.movingBlock.moveY(this._game.speed * dt);
 
@@ -64,6 +68,8 @@ class Play extends State {
     } else {
       this._game.moveLines(dt);
     }
+
+    this._game.timeOver -= 1;
   }
 
   exit() {
@@ -94,17 +100,58 @@ class Welcome extends State {
 
   init() {
     console.info(this._info);
-    this._game.keyboard.space.press = () => {
+    for (let n = 0; n < 3; n++) {
+      this._game.keyboard.prompt.addInput(0);
+      this._game.keyboard.prompt.size += 1;
+    }
+
+    this._game.keyboard.up.press = () => {
+      this._game.keyboard.prompt.moveCursor(0, 1);
+    };
+
+    this._game.keyboard.down.press = () => {
+      this._game.keyboard.prompt.moveCursor(0, -1);
+    };
+
+    this._game.keyboard.left.press = () => {
+      this._game.keyboard.prompt.moveCursor(-1, 0);
+    };
+
+    this._game.keyboard.right.press = () => {
+      this._game.keyboard.prompt.moveCursor(1, 0);
+    };
+
+    this._game.keyboard.enter.press = () => {
+      console.debug(`OFF YOU GO ${this._game.user.name}`);
       this._game.screen.removeChildren();
       this._game.background.filters = [];
       this.exit();
     };
-    const msg = new pixi.Text('FALL_DOWN', { fontFamily: 'Press Start 2P' });
+
+    // TEXTS
+    let msg = new pixi.Text('FALL_DOWN', { fontFamily: 'Press Start 2P' });
+    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 - 48);
+    this._container.addChild(msg);
+
+    let txt = `Use ${String.fromCharCode(8593)} and ${String.fromCharCode(8595)} to scroll into letters.`;
+    msg = new pixi.Text(txt, { fontFamily: 'Press Start 2P', fontSize: '1em' });
     msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2);
     this._container.addChild(msg);
+
+    txt = `Press Enter to log in.`;
+    msg = new pixi.Text(txt, { fontFamily: 'Press Start 2P', fontSize: '1em' });
+    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 + 24);
+    this._container.addChild(msg);
+
+    this.userName = new pixi.Text(`${this._game.keyboard.prompt}`, { fontFamily: 'Press Start 2P', fontSize: '2em' });
+    this.userName.position.set((this._container._width - this.userName.width) / 2, this._container._height / 2 + 64);
+    this._container.addChild(this.userName);
   }
 
-  update(dt) {}
+  update(dt) {
+    this.userName.text = `${this._game.keyboard.prompt}`;
+    this._game.user.name = this.userName.text;
+  }
 
   exit() {
     this._game.state = new Play(this._container, this._game, 'PLAYING...');

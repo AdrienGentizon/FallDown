@@ -34,6 +34,7 @@ class Game {
     this.prevPosition = new Vector();
     this.rows;
     this.gpsByRow = [];
+    this.user = { name: '' };
 
     this.makeLayers();
     this.init();
@@ -124,11 +125,7 @@ class Game {
   }
 
   loop(dt) {
-    if (this.timeOver < 0) {
-      this.state = this.gameover;
-    }
     this.state.update(dt);
-    this.timeOver -= 1;
   }
 
   makeKeyboard() {
@@ -136,7 +133,10 @@ class Game {
       space: KeyCodes.SPACE,
       left: KeyCodes.LEFT,
       right: KeyCodes.RIGHT,
+      up: KeyCodes.UP,
+      down: KeyCodes.DOWN,
       esc: KeyCodes.ESC,
+      enter: KeyCodes.ENTER,
     });
   }
 
@@ -203,73 +203,6 @@ class Game {
       }
     }
     this.dyingBlocks = [];
-  }
-
-  // STATES
-  gameover(dt) {
-    console.info('GAME OVER');
-    this.app.ticker.stop();
-  }
-
-  play(dt) {
-    if (this.movingBlock !== undefined) {
-      this.movingBlock.moveY(this.speed * dt);
-
-      for (const block of this.staticBlocks) {
-        this.movingBlock.checkCollisionsY(block);
-      }
-      this.movingBlock.checkGround();
-
-      // Block stopped by hitting the bottom edge or the top of another bloc
-      if (this.movingBlock._isStopped) {
-        this.staticBlocks.push(this.movingBlock);
-        this.movingBlock = undefined;
-        this.checkLines();
-      }
-    } else {
-      this.moveLines(dt);
-    }
-  }
-
-  preparePlay(dt) {
-    this.keyboard.left.press = () => {
-      this.movingBlock.moveX(-this.blockWidth);
-      this.movingBlock.checkEdges();
-      for (const block of this.staticBlocks) {
-        this.movingBlock.checkCollisionsX(block);
-      }
-    };
-
-    this.keyboard.right.press = () => {
-      this.movingBlock.moveX(this.blockWidth);
-      this.movingBlock.checkEdges();
-      for (const block of this.staticBlocks) {
-        this.movingBlock.checkCollisionsX(block);
-      }
-    };
-    this.keyboard.space.press = () => {};
-    this.rows = [];
-
-    this.resetRows();
-
-    this.newMovingBlock();
-    this.state = this.play;
-    console.info('GAME ON...');
-  }
-
-  welcome(dt) {
-    console.info('LOADING GAME...');
-    this.keyboard.space.press = () => {
-      this.state = this.preparePlay;
-      this.screen.removeChildren();
-      this.background.filters = [];
-    };
-    if (this.screen.children.length == 0) {
-      Screens.welcome(this.screen);
-    }
-    if (this.background.children.length > 0) {
-      this.background.filters = [new pixi.filters.BlurFilter(2, 4)];
-    }
   }
 }
 
