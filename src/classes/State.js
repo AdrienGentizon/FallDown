@@ -1,4 +1,9 @@
+'use strict';
+
 const pixi = require('pixi.js');
+
+const FontStyle = require('./FontStyle');
+
 class State {
   constructor(container, game = undefined, info = '') {
     this._container = container;
@@ -84,7 +89,7 @@ class GameOver extends State {
 
   init() {
     console.info(this._info);
-    let msg = new pixi.Text('GAME OVER', { fontFamily: 'Press Start 2P', fontSize: '3em' });
+    let msg = new pixi.Text('GAME OVER', FontStyle.h1);
     msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 - 48);
     this._container.addChild(msg);
   }
@@ -132,21 +137,21 @@ class Welcome extends State {
     };
 
     // TEXTS
-    let msg = new pixi.Text('FALL_DOWN', { fontFamily: 'Press Start 2P', fontSize: '3em' });
+    let msg = new pixi.Text('FALL_DOWN', FontStyle.h1);
     msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 - 48);
     this._container.addChild(msg);
 
     let txt = `Use ${String.fromCharCode(8593)} and ${String.fromCharCode(8595)} to scroll into letters.`;
-    msg = new pixi.Text(txt, { fontFamily: 'Press Start 2P', fontSize: '1em' });
+    msg = new pixi.Text(txt, FontStyle.p);
     msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2);
     this._container.addChild(msg);
 
     txt = `Press Enter to log in.`;
-    msg = new pixi.Text(txt, { fontFamily: 'Press Start 2P', fontSize: '1em' });
+    msg = new pixi.Text(txt, FontStyle.p);
     msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 + 24);
     this._container.addChild(msg);
 
-    this.userName = new pixi.Text(`${this._game.keyboard.prompt}`, { fontFamily: 'Press Start 2P', fontSize: '2em' });
+    this.userName = new pixi.Text(`${this._game.keyboard.prompt}`, FontStyle.h1);
     this.userName.position.set((this._container._width - this.userName.width) / 2, this._container._height / 2 + 64);
     this._container.addChild(this.userName);
   }

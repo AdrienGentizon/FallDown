@@ -1,3 +1,5 @@
+'use strict';
+
 class Keyboard {
   static KeyCodes = {
     SPACE: ' ',
