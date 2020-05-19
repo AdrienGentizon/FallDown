@@ -7,6 +7,7 @@ const Keyboard = require('./Keyboard');
 const KeyCodes = Keyboard.KeyCodes;
 const Loader = require('./Loader');
 const Screens = require('./Screens');
+const Storage = require('./Storage');
 const State = require('./State');
 const Vector = require('./Vector');
 
@@ -35,6 +36,7 @@ class Game {
     this.rows;
     this.gpsByRow = [];
     this.user = { name: '' };
+    this.storage = undefined;
 
     this.makeLayers();
     this.init();
@@ -112,10 +114,16 @@ class Game {
   }
 
   init() {
+    // WEBSTORAGE
+    this.storage = new Storage();
+    this.storage.fetchData();
+
+    // FPS
     this.app.ticker.add((dt) => {
       this.loop(dt);
     });
 
+    // KEYBOARD CONTROLS
     this.makeKeyboard();
 
     new Loader(this.urls, this.dispatchSprites.bind(this));
