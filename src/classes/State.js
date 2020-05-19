@@ -130,10 +130,18 @@ class Welcome extends State {
     };
 
     this._game.keyboard.enter.press = () => {
-      console.debug(`OFF YOU GO ${this._game.user.name}`);
-      this._game.screen.removeChildren();
-      this._game.background.filters = [];
-      this.exit();
+      if (this._game.storage.checkUserNameFormat(this._game.user.name)) {
+        if (this._game.storage.getUser(this._game.user.name) === undefined) {
+          this._game.storage.setUser(this._game.user.name, 'name', this._game.user.name);
+          this._game.storage.setUser(this._game.user.name, 'score', 0);
+        }
+
+        this._game.storage.getUser(this._game.user.name);
+        console.debug(`OFF YOU GO ${this._game.user.name}`);
+        this._game.screen.removeChildren();
+        this._game.background.filters = [];
+        this.exit();
+      }
     };
 
     // TEXTS

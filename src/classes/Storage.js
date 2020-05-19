@@ -6,6 +6,7 @@ class Storage {
     this.dataString = '';
     try {
       this.checkEnabled();
+      this.init();
     } catch (error) {
       console.error(error);
     }
@@ -21,11 +22,18 @@ class Storage {
     }
   }
 
+  checkUserNameFormat(userName) {
+    const pattern = /^[a-z]{3}$/i;
+    return pattern.test(userName);
+  }
+
+  clear() {
+    localStorage.removeItem(this._localStorageKey);
+  }
+
   fetchData() {
     if (this._isEnabled) {
-      console.dir(localStorage);
       if (localStorage[this._localStorageKey]) {
-        console.dir(JSON.parse(localStorage.getItem(this._localStorageKey)).users);
       } else {
         console.debug('fallDown Storage not present');
         this.init();
@@ -35,16 +43,35 @@ class Storage {
     }
   }
 
-  init() {
-    this.data = { users: [] };
-    this.dataString = JSON.stringify(this.data);
-    console.log(this.dataString);
-
-    localStorage.setItem(this._localStorageKey, this.dataString);
+  getUser(name) {
+    if (this.data.users[name]) {
+      return this.data.users.name;
+    } else {
+      console.debug('Unknown user.');
+      return undefined;
+    }
   }
 
-  clear() {
-    localStorage.removeItem(this._localStorageKey);
+  init() {
+    this.data = { users: {} };
+    this.dataString = JSON.stringify(this.data);
+
+    localStorage.setItem(this._localStorageKey, this.dataString);
+    console.info('STORAGE INITIALIZED');
+  }
+
+  setUser(name, key, value) {
+    if (this.data.users[name]) {
+      console.debug('Updating user.');
+    } else {
+      console.debug('Creating user.');
+      const user = {};
+      user[key] = value;
+      console.log(user);
+
+      this.data.users[name] = user;
+      console.log(this.data);
+    }
   }
 }
 
