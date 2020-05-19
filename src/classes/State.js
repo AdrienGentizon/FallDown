@@ -84,6 +84,9 @@ class GameOver extends State {
 
   init() {
     console.info(this._info);
+    let msg = new pixi.Text('GAME OVER', { fontFamily: 'Press Start 2P', fontSize: '3em' });
+    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 - 48);
+    this._container.addChild(msg);
   }
 
   update(dt) {}
