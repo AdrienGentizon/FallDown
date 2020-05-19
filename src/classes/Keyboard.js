@@ -13,30 +13,30 @@ class Keyboard {
       this[key] = new Key(value);
     }
     this.prompt = {
-      x: 0,
-      y: 0,
-      moveCursor: function (x, y) {
-        this.x += x;
-        this.y += y;
+      index: 0,
+      nextLetter: function (x) {
+        this.index += x;
 
-        this.x %= this.size;
-        this.y %= this.alphabet.length;
+        this.index %= this.size;
 
-        if (this.x === -1) {
+        if (this.index === -1) {
           this.x = this.size - 1;
         }
+      },
+      nextChar: function (y) {
+        this.chars[this.index] += y;
 
-        if (this.y === -1) {
-          this.y = this.alphabet.length - 1;
+        this.chars[this.index] %= this.alphabet.length;
+
+        if (this.chars[this.index] === -1) {
+          this.chars[this.index] = this.alphabet.length - 1;
         }
-
-        this.cache[this.x] = this.y;
       },
       size: 0,
-      cache: [],
+      chars: [],
       toString: function () {
         let output = '';
-        for (const letter of this.cache) {
+        for (const letter of this.chars) {
           output += this.alphabet[letter];
         }
         return output;
@@ -46,7 +46,7 @@ class Keyboard {
       },
       addInput: function (input) {
         // check if input is in alphabet
-        this.cache.push(input);
+        this.chars.push(input);
       },
       alphabet: [
         '_',

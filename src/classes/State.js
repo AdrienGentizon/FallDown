@@ -106,19 +106,19 @@ class Welcome extends State {
     }
 
     this._game.keyboard.up.press = () => {
-      this._game.keyboard.prompt.moveCursor(0, 1);
+      this._game.keyboard.prompt.nextChar(1);
     };
 
     this._game.keyboard.down.press = () => {
-      this._game.keyboard.prompt.moveCursor(0, -1);
+      this._game.keyboard.prompt.nextChar(-1);
     };
 
     this._game.keyboard.left.press = () => {
-      this._game.keyboard.prompt.moveCursor(-1, 0);
+      this._game.keyboard.prompt.nextLetter(-1);
     };
 
     this._game.keyboard.right.press = () => {
-      this._game.keyboard.prompt.moveCursor(1, 0);
+      this._game.keyboard.prompt.nextLetter(1);
     };
 
     this._game.keyboard.enter.press = () => {
@@ -129,7 +129,7 @@ class Welcome extends State {
     };
 
     // TEXTS
-    let msg = new pixi.Text('FALL_DOWN', { fontFamily: 'Press Start 2P' });
+    let msg = new pixi.Text('FALL_DOWN', { fontFamily: 'Press Start 2P', fontSize: '3em' });
     msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 - 48);
     this._container.addChild(msg);
 
