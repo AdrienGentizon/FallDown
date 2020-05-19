@@ -5,3 +5,4 @@ Music of course
 Highscores in WebStorage
 Controls clickable
 More sprites as blocks
+checkEdges of Block is broken
