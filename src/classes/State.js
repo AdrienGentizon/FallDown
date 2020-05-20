@@ -68,10 +68,22 @@ class Play extends State {
       if (this._game.movingBlock._isStopped) {
         this._game.staticBlocks.push(this._game.movingBlock);
         this._game.movingBlock = undefined;
-        this._game.checkLines();
+        this._game.staticBlocksCursor = 0;
       }
     } else {
+      // Time to check holes and move static blocks
+      this._game.checkLines();
+
       this._game.moveLines(dt);
+      let areStopped = 0;
+      for (const block of this._game.staticBlocks) {
+        if (block.isStopped) {
+          areStopped += 1;
+        }
+      }
+      if (areStopped === this._game.staticBlocks.length) {
+        this._game.newMovingBlock();
+      }
     }
 
     this._game.timeOver -= 1;

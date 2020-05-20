@@ -30,6 +30,7 @@ class Game {
     this.groundLevel = this.h - this.blockWidth;
     this.blockFactory = [];
     this.staticBlocks = [];
+    this.staticBlocksCursor = 0;
     this.dyingBlocks = [];
     this.movingBlock;
     this.prevPosition = new Vector();
@@ -166,32 +167,21 @@ class Game {
   }
 
   moveLines(dt) {
-    let nStopped = 0;
-
     this.staticBlocks.sort(function (a, b) {
       return b.sprite.y - a.sprite.y;
     });
 
-    for (const block of this.staticBlocks) {
-      block.isStopped = false;
-    }
+    this.unlockStaticBlocks();
 
     for (let n = 0; n < this.staticBlocks.length; n++) {
       const block = this.staticBlocks[n];
       if (!block.isStopped) {
-        block.moveY(2 * this.speed * dt);
+        block.moveY(0.75 * this.speed * dt);
         block.checkGround();
         for (const b of this.staticBlocks) {
           block.checkCollisionsY(b);
         }
-        if (block.isStopped) {
-          nStopped += 1;
-        }
       }
-    }
-
-    if (nStopped === this.staticBlocks.length) {
-      this.newMovingBlock();
     }
   }
 
@@ -211,6 +201,12 @@ class Game {
       }
     }
     this.dyingBlocks = [];
+  }
+
+  unlockStaticBlocks() {
+    for (const block of this.staticBlocks) {
+      block.isStopped = false;
+    }
   }
 }
 

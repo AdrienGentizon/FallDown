@@ -42,17 +42,18 @@ class Block {
   }
 
   // METHODS
-
   checkCollisionsY(block) {
     if (block !== this) {
       if (this._sprite.y > block.sprite.y - this._sprite.height && this._sprite.x == block.sprite.x) {
         this.translateY(this._game.findValidPosition(this._position).y);
         this._isStopped = true;
+        return true;
       }
+      return false;
     }
   }
 
-  checkCollisionsX(block, dir) {
+  checkCollisionsX(block) {
     if (block !== this) {
       for (const vertex of this._vertices) {
         if (
@@ -73,7 +74,7 @@ class Block {
   }
 
   checkEdges() {
-    if (this._sprite.x < 0 || this._sprite.x + this._sprite.width > this._game.w) {
+    if (this._sprite.x <= 0 || this._sprite.x + this._sprite.width >= this._game.w) {
       this.translateX(this._prevPosition.x);
     }
   }
@@ -81,9 +82,10 @@ class Block {
   checkGround() {
     if (this._sprite.y > this._game.groundLevel - this._sprite.height) {
       this.translateY(this._game.findValidPosition(this._position).y);
-
       this._isStopped = true;
+      return true;
     }
+    return false;
   }
 
   computeVertices() {
