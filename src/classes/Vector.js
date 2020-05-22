@@ -45,7 +45,7 @@ class Vector {
       |  u  |
       x-----b
     */
-    if (u.x >= ax && u.x <= bx && u.y >= ay && u.y <= by) {
+    if (u.x > ax && u.x < bx && u.y > ay && u.y < by) {
       return true;
     } else {
       return false;

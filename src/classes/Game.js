@@ -46,7 +46,7 @@ class Game {
 
   checkLines() {
     this.resetRows();
-    // Place block.value in a 2D array represneting the tetris grid
+    // Place block.value in a 2D array representing the tetris grid
     for (const block of this.staticBlocks) {
       this.rows[Math.floor(block.sprite.y / this.blockWidth)][Math.floor(block.sprite.x / this.blockWidth)] = block;
     }
@@ -88,6 +88,10 @@ class Game {
       block.kill();
       this.staticBlocks.splice(this.staticBlocks.indexOf(block), 1);
     }
+    // sorts static blocks from the lowest altitude to the highest
+    this.staticBlocks.sort(function (a, b) {
+      return b.sprite.y - a.sprite.y;
+    });
   }
 
   dispatchSprites(sprites) {
