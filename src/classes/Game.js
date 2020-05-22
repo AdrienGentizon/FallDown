@@ -41,7 +41,7 @@ class Game {
 
     this.makeLayers();
     this.init();
-    this.DEBUG = true;
+    this.DEBUG = false;
   }
 
   checkLines() {
