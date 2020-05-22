@@ -25,18 +25,22 @@ class Play extends State {
     console.info(this._info);
 
     this._game.keyboard.left.press = () => {
-      this._game.movingBlock.moveX(-this._game.blockWidth);
-      this._game.movingBlock.checkEdges();
-      for (const block of this._game.staticBlocks) {
-        this._game.movingBlock.checkCollisionsX(block);
+      if (this._game.movingBlock !== undefined) {
+        this._game.movingBlock.moveX(-this._game.blockWidth);
+        this._game.movingBlock.checkEdges();
+        for (const block of this._game.staticBlocks) {
+          this._game.movingBlock.checkCollisionsX(block);
+        }
       }
     };
 
     this._game.keyboard.right.press = () => {
-      this._game.movingBlock.moveX(this._game.blockWidth);
-      this._game.movingBlock.checkEdges();
-      for (const block of this._game.staticBlocks) {
-        this._game.movingBlock.checkCollisionsX(block);
+      if (this._game.movingBlock !== undefined) {
+        this._game.movingBlock.moveX(this._game.blockWidth);
+        this._game.movingBlock.checkEdges();
+        for (const block of this._game.staticBlocks) {
+          this._game.movingBlock.checkCollisionsX(block);
+        }
       }
     };
     this._game.keyboard.space.press = () => {};
@@ -71,9 +75,11 @@ class Play extends State {
         this._game.movingBlock = undefined;
       }
     } else {
-      // Time to check holes and move static blocks
+      // Checks lines of similar blocks
+      // deletes them if necessary
       this._game.checkLines();
-
+      // moves blocks
+      // check how many are stopped
       let areStopped = 0;
       for (const block of this._game.staticBlocks) {
         block.isStopped = false;
@@ -86,10 +92,16 @@ class Play extends State {
           areStopped += 1;
         }
       }
-      console.log(`blocks stopped: ${areStopped}/${this._game.staticBlocks.length}`);
 
+      // Checks lines of similar blocks
+      // deletes them if necessary
+      this._game.checkLines();
+
+      // new moving block if necessary
       if (areStopped === this._game.staticBlocks.length) {
         this._game.newMovingBlock();
+      } else {
+        console.log(`blocks stopped: ${areStopped}/${this._game.staticBlocks.length}`);
       }
 
       // this._game.moveLines(dt);
