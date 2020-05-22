@@ -1,7 +1,8 @@
-Adding "GAMEOVER" to gameover screen/state
 Coding the HUI with time an score
 Implementing score
-Fixing weird sprite's position when stopped
 Fixing movingLines when it should
 Music of course
 Highscores in WebStorage
+Controls clickable
+More sprites as blocks
+checkEdges of Block is broken

@@ -7,6 +7,8 @@ const Keyboard = require('./Keyboard');
 const KeyCodes = Keyboard.KeyCodes;
 const Loader = require('./Loader');
 const Screens = require('./Screens');
+const Storage = require('./Storage');
+const State = require('./State');
 const Vector = require('./Vector');
 
 class Game {
@@ -28,11 +30,14 @@ class Game {
     this.groundLevel = this.h - this.blockWidth;
     this.blockFactory = [];
     this.staticBlocks = [];
+    this.staticBlocksCursor = 0;
     this.dyingBlocks = [];
     this.movingBlock;
     this.prevPosition = new Vector();
     this.rows;
     this.gpsByRow = [];
+    this.user = { name: '' };
+    this.storage = undefined;
 
     this.makeLayers();
     this.init();
@@ -41,7 +46,7 @@ class Game {
 
   checkLines() {
     this.resetRows();
-    // Place block.value in a 2D array represneting the tetris grid
+    // Place block.value in a 2D array representing the tetris grid
     for (const block of this.staticBlocks) {
       this.rows[Math.floor(block.sprite.y / this.blockWidth)][Math.floor(block.sprite.x / this.blockWidth)] = block;
     }
@@ -83,6 +88,10 @@ class Game {
       block.kill();
       this.staticBlocks.splice(this.staticBlocks.indexOf(block), 1);
     }
+    // sorts static blocks from the lowest altitude to the highest
+    this.staticBlocks.sort(function (a, b) {
+      return b.sprite.y - a.sprite.y;
+    });
   }
 
   dispatchSprites(sprites) {
@@ -110,24 +119,26 @@ class Game {
   }
 
   init() {
+    // WEBSTORAGE
+    this.storage = new Storage();
+    this.storage.fetchData();
+
+    // FPS
     this.app.ticker.add((dt) => {
       this.loop(dt);
     });
 
+    // KEYBOARD CONTROLS
     this.makeKeyboard();
 
     new Loader(this.urls, this.dispatchSprites.bind(this));
     document.body.appendChild(this.app.view);
 
-    this.state = this.welcome;
+    this.state = new State.Welcome(this.screen, this, 'FALL_DOWN GAME');
   }
 
   loop(dt) {
-    if (this.timeOver < 0) {
-      this.state = this.gameover;
-    }
-    this.state(dt);
-    this.timeOver -= 1;
+    this.state.update(dt);
   }
 
   makeKeyboard() {
@@ -135,6 +146,10 @@ class Game {
       space: KeyCodes.SPACE,
       left: KeyCodes.LEFT,
       right: KeyCodes.RIGHT,
+      up: KeyCodes.UP,
+      down: KeyCodes.DOWN,
+      esc: KeyCodes.ESC,
+      enter: KeyCodes.ENTER,
     });
   }
 
@@ -147,7 +162,7 @@ class Game {
     this.screen.name = 'screen';
     this.screen.width = this.w;
     this.screen.height = this.h;
-    this.screen.calculateBounds();
+    // this.screen.calculateBounds();
     this.app.stage.addChild(this.screen);
 
     this.hui = new pixi.Container();
@@ -156,32 +171,21 @@ class Game {
   }
 
   moveLines(dt) {
-    let nStopped = 0;
-
     this.staticBlocks.sort(function (a, b) {
       return b.sprite.y - a.sprite.y;
     });
 
-    for (const block of this.staticBlocks) {
-      block.isStopped = false;
-    }
+    this.unlockStaticBlocks();
 
     for (let n = 0; n < this.staticBlocks.length; n++) {
       const block = this.staticBlocks[n];
       if (!block.isStopped) {
-        block.moveY(2 * this.speed * dt);
+        block.moveY(0.75 * this.speed * dt);
         block.checkGround();
         for (const b of this.staticBlocks) {
           block.checkCollisionsY(b);
         }
-        if (block.isStopped) {
-          nStopped += 1;
-        }
       }
-    }
-
-    if (nStopped === this.staticBlocks.length) {
-      this.newMovingBlock();
     }
   }
 
@@ -203,70 +207,9 @@ class Game {
     this.dyingBlocks = [];
   }
 
-  // STATES
-  gameover(dt) {
-    console.info('GAME OVER');
-    this.app.ticker.stop();
-  }
-
-  play(dt) {
-    if (this.movingBlock !== undefined) {
-      this.movingBlock.moveY(this.speed * dt);
-
-      for (const block of this.staticBlocks) {
-        this.movingBlock.checkCollisionsY(block);
-      }
-      this.movingBlock.checkGround();
-
-      // Block stopped by hitting the bottom edge or the top of another bloc
-      if (this.movingBlock._isStopped) {
-        this.staticBlocks.push(this.movingBlock);
-        this.movingBlock = undefined;
-        this.checkLines();
-      }
-    } else {
-      this.moveLines(dt);
-    }
-  }
-
-  preparePlay(dt) {
-    this.keyboard.left.press = () => {
-      this.movingBlock.moveX(-this.blockWidth);
-      this.movingBlock.checkEdges();
-      for (const block of this.staticBlocks) {
-        this.movingBlock.checkCollisionsX(block);
-      }
-    };
-
-    this.keyboard.right.press = () => {
-      this.movingBlock.moveX(this.blockWidth);
-      this.movingBlock.checkEdges();
-      for (const block of this.staticBlocks) {
-        this.movingBlock.checkCollisionsX(block);
-      }
-    };
-    this.keyboard.space.press = () => {};
-    this.rows = [];
-
-    this.resetRows();
-
-    this.newMovingBlock();
-    this.state = this.play;
-    console.info('GAME ON...');
-  }
-
-  welcome(dt) {
-    console.info('LOADING GAME...');
-    this.keyboard.space.press = () => {
-      this.state = this.preparePlay;
-      this.screen.removeChildren();
-      this.background.filters = [];
-    };
-    if (this.screen.children.length == 0) {
-      Screens.welcome(this.screen);
-    }
-    if (this.background.children.length > 0) {
-      this.background.filters = [new pixi.filters.BlurFilter(2, 4)];
+  unlockStaticBlocks() {
+    for (const block of this.staticBlocks) {
+      block.isStopped = false;
     }
   }
 }

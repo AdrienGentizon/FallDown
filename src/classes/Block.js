@@ -42,17 +42,39 @@ class Block {
   }
 
   // METHODS
-
   checkCollisionsY(block) {
+    // if (block !== this) {
+    //   if (this._sprite.y + this._sprite.height >= block.sprite.y && this._sprite.x === block.sprite.x) {
+    //     this.translateY(this._game.findValidPosition(this._position).y);
+    //     this._isStopped = true;
+    //     return true;
+    //   }
+    //   return false;
+    // }
+
     if (block !== this) {
-      if (this._sprite.y > block.sprite.y - this._sprite.height && this._sprite.x == block.sprite.x) {
-        this.translateY(this._game.findValidPosition(this._position).y);
+      const vertex = new Vector(this._sprite.x + this._sprite.width / 2, this._sprite.y + this._sprite.height);
+
+      if (
+        Vector.isInside(
+          vertex,
+          block.sprite.x,
+          block.sprite.y,
+          block.sprite.x + block.sprite.width,
+          block.sprite.y + block.sprite.height
+        )
+      ) {
+        // this.translateY(this._game.findValidPosition(this._position).y);
+        this.prevY();
         this._isStopped = true;
+        return true;
       }
+
+      return false;
     }
   }
 
-  checkCollisionsX(block, dir) {
+  checkCollisionsX(block) {
     if (block !== this) {
       for (const vertex of this._vertices) {
         if (
@@ -73,17 +95,18 @@ class Block {
   }
 
   checkEdges() {
-    if (this._sprite.x < 0 || this._sprite.x + this._sprite.width > this._game.w) {
+    if (this._sprite.x <= 0 || this._sprite.x + this._sprite.width >= this._game.w) {
       this.translateX(this._prevPosition.x);
     }
   }
 
   checkGround() {
-    if (this._sprite.y > this._game.groundLevel - this._sprite.height) {
-      this.translateY(this._game.findValidPosition(this._position).y);
-
+    if (this._sprite.y + this._sprite.height > this._game.groundLevel) {
+      this.prevY();
       this._isStopped = true;
+      return true;
     }
+    return false;
   }
 
   computeVertices() {
@@ -111,17 +134,17 @@ class Block {
   }
 
   moveX(dx) {
-    this._prevPosition.x = this._position.x;
-    this._sprite.x += dx;
-    this._position.x = Math.floor(this._sprite.x);
-    this.computeVertices();
+    this.translateX(this._sprite.x + dx);
   }
 
   moveY(dy) {
-    this._prevPosition.y = this._position.y;
-    this._sprite.y += dy;
-    this._position.y = Math.floor(this._sprite.y);
-    this.computeVertices();
+    this.translateY(this._sprite.y + dy);
+  }
+
+  prevX() {}
+
+  prevY() {
+    this.translateY(this._game.findValidPosition(this._position).y);
   }
 
   translateX(x) {

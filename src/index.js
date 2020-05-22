@@ -10,10 +10,12 @@ const options = {
   resolution: 1, // default: 1
   assets: [
     '../assets/background-kitchen.png',
-    '../assets/block-eggs.png',
-    '../assets/block-chicken.png',
+    '../assets/block-eggplant.png',
+    '../assets/block-cherry.png',
     '../assets/block-strawberry.png',
     '../assets/block-watermelon.png',
+    '../assets/block-avocado.png',
+    '../assets/block-dragonfruit.png',
   ],
 };
 
