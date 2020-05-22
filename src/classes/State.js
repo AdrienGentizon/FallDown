@@ -56,6 +56,7 @@ class Play extends State {
       this.exit();
     }
 
+    // BLOCK IS FALLING
     if (this._game.movingBlock !== undefined) {
       this._game.movingBlock.moveY(this._game.speed * dt);
 
@@ -68,22 +69,40 @@ class Play extends State {
       if (this._game.movingBlock._isStopped) {
         this._game.staticBlocks.push(this._game.movingBlock);
         this._game.movingBlock = undefined;
-        this._game.staticBlocksCursor = 0;
       }
     } else {
       // Time to check holes and move static blocks
       this._game.checkLines();
 
-      this._game.moveLines(dt);
       let areStopped = 0;
       for (const block of this._game.staticBlocks) {
+        block.isStopped = false;
+        block.moveY(0.75 * this._game.speed * dt);
+        block.checkGround();
+        for (const b of this._game.staticBlocks) {
+          block.checkCollisionsY(b);
+        }
         if (block.isStopped) {
           areStopped += 1;
         }
       }
+      console.log(`blocks stopped: ${areStopped}/${this._game.staticBlocks.length}`);
+
       if (areStopped === this._game.staticBlocks.length) {
         this._game.newMovingBlock();
       }
+
+      // this._game.moveLines(dt);
+
+      // let areStopped = 0;
+      // for (const block of this._game.staticBlocks) {
+      //   if (block.isStopped) {
+      //     areStopped += 1;
+      //   }
+      // }
+      // if (areStopped === this._game.staticBlocks.length) {
+      //   this._game.newMovingBlock();
+      // }
     }
 
     this._game.timeOver -= 1;
