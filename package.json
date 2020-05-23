@@ -5,7 +5,7 @@
   "main": ".src/index.js",
   "scripts": {
     "test": "mocha --watch",
-    "build": "webpack",
+    "build": "webpack & sass ./src/styles/style.scss ./dist/style.css",
     "dev": "webpack --watch"
   },
   "author": "Adrien GENTIZON",

@@ -16,9 +16,89 @@ class State {
   exit() {}
 }
 
+class GameOver extends State {
+  constructor(container, game = undefined, info = '') {
+    super(container, game, info);
+  }
+
+  init() {
+    console.info(this._info);
+    let msg = new pixi.Text('__GAME OVER__', FontStyle.h1);
+    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 - 96);
+    this._container.addChild(msg);
+  }
+
+  update(dt) {}
+
+  exit() {
+    this._game.app.ticker.stop();
+  }
+}
+
+class Instructions extends State {
+  constructor(container, game = undefined, info = '') {
+    super(container, game, info);
+  }
+
+  init() {
+    console.info(this._info);
+
+    this._game.keyboard.enter.press = () => {
+      const user = this._game.storage.getUser(this._game.user.name);
+      console.debug(`OFF YOU GO ${user}`);
+      this.exit();
+    };
+
+    let msg = new pixi.Text('__INSTRUCTIONS__', FontStyle.h2);
+    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 - 96);
+    this._container.addChild(msg);
+
+    msg = new pixi.Text(`Try to make lines of 3 (or more) fruits.`, FontStyle.p);
+    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2);
+    this._container.addChild(msg);
+
+    msg = new pixi.Text(
+      `Use ${String.fromCharCode(8592)} and ${String.fromCharCode(8594)} to move the falling fruit.`,
+      FontStyle.p
+    );
+    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 + 24);
+    this._container.addChild(msg);
+
+    msg = new pixi.Text(`Press <Enter> when ready!`, FontStyle.p);
+    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 + 96);
+    this._container.addChild(msg);
+  }
+
+  update(dt) {}
+  exit() {
+    this._container.removeChildren();
+    this._game.state = new Play(this._game.screen, this._game, 'PLAYING...');
+  }
+}
+
 class Play extends State {
   constructor(container, game = undefined, info = '') {
     super(container, game, info);
+    this.hui = {
+      score: (() => {
+        const hui = new pixi.Text('', FontStyle.p);
+        hui.position.set(this._container._width / 2, 0);
+        return hui;
+      })(),
+      userName: (() => {
+        const hui = new pixi.Text(this._game.user.name, FontStyle.p);
+        hui.position.set(0, 0);
+        return hui;
+      })(),
+      timeOver: (() => {
+        const hui = new pixi.Text(this._game.timeOver, FontStyle.p);
+        hui.position.set(this._container._width - hui.width, 0);
+        return hui;
+      })(),
+    };
+    this._container.addChild(this.hui.userName);
+    this._container.addChild(this.hui.score);
+    this._container.addChild(this.hui.timeOver);
   }
 
   init() {
@@ -103,44 +183,16 @@ class Play extends State {
       } else {
         console.log(`blocks stopped: ${areStopped}/${this._game.staticBlocks.length}`);
       }
-
-      // this._game.moveLines(dt);
-
-      // let areStopped = 0;
-      // for (const block of this._game.staticBlocks) {
-      //   if (block.isStopped) {
-      //     areStopped += 1;
-      //   }
-      // }
-      // if (areStopped === this._game.staticBlocks.length) {
-      //   this._game.newMovingBlock();
-      // }
     }
 
     this._game.timeOver -= 1;
+
+    this.hui.score.text = this._game.user.score * 25;
+    this.hui.timeOver.text = Math.floor(this._game.timeOver / 10);
   }
 
   exit() {
     this._game.state = new GameOver(this._container, this._game, 'GAME OVER');
-  }
-}
-
-class GameOver extends State {
-  constructor(container, game = undefined, info = '') {
-    super(container, game, info);
-  }
-
-  init() {
-    console.info(this._info);
-    let msg = new pixi.Text('GAME OVER', FontStyle.h1);
-    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 - 48);
-    this._container.addChild(msg);
-  }
-
-  update(dt) {}
-
-  exit() {
-    this._game.app.ticker.stop();
   }
 }
 
@@ -188,8 +240,8 @@ class Welcome extends State {
     };
 
     // TEXTS
-    let msg = new pixi.Text('FALL_DOWN', FontStyle.h1);
-    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 - 48);
+    let msg = new pixi.Text('__FALL_DOWN__', FontStyle.h1);
+    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 - 96);
     this._container.addChild(msg);
 
     let txt = `Use ${String.fromCharCode(8593)} and ${String.fromCharCode(8595)} to scroll into letters.`;
@@ -197,14 +249,14 @@ class Welcome extends State {
     msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2);
     this._container.addChild(msg);
 
-    txt = `Press Enter to log in.`;
-    msg = new pixi.Text(txt, FontStyle.p);
-    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 + 24);
-    this._container.addChild(msg);
-
     this.userName = new pixi.Text(`${this._game.keyboard.prompt}`, FontStyle.h1);
-    this.userName.position.set((this._container._width - this.userName.width) / 2, this._container._height / 2 + 64);
+    this.userName.position.set((this._container._width - this.userName.width) / 2, this._container._height / 2 + 24);
     this._container.addChild(this.userName);
+
+    txt = `Press <Enter> when ready!`;
+    msg = new pixi.Text(txt, FontStyle.p);
+    msg.position.set((this._container._width - msg.width) / 2, this._container._height / 2 + 96);
+    this._container.addChild(msg);
   }
 
   update(dt) {
@@ -213,10 +265,11 @@ class Welcome extends State {
   }
 
   exit() {
-    this._game.state = new Play(this._container, this._game, 'PLAYING...');
+    this._game.state = new Instructions(this._container, this._game, 'INSTRUCTIONS...');
   }
 }
 
-exports.Play = Play;
 exports.GameOver = GameOver;
+exports.Instructions = Instructions;
+exports.Play = Play;
 exports.Welcome = Welcome;

@@ -36,7 +36,7 @@ class Game {
     this.prevPosition = new Vector();
     this.rows;
     this.gpsByRow = [];
-    this.user = { name: '' };
+    this.user = { name: '', score: 0 };
     this.storage = undefined;
 
     this.makeLayers();
@@ -83,6 +83,9 @@ class Game {
         }
       }
     }
+    // upating score
+    this.user.score += this.dyingBlocks.length;
+
     // deleteing blocks from dyingBlocks
     for (const block of this.dyingBlocks) {
       block.kill();
@@ -132,7 +135,8 @@ class Game {
     this.makeKeyboard();
 
     new Loader(this.urls, this.dispatchSprites.bind(this));
-    document.body.appendChild(this.app.view);
+    // document.body.appendChild(this.app.view);
+    document.getElementsByClassName('app-canvas')[0].appendChild(this.app.view);
 
     this.state = new State.Welcome(this.screen, this, 'FALL_DOWN GAME');
   }
@@ -162,7 +166,6 @@ class Game {
     this.screen.name = 'screen';
     this.screen.width = this.w;
     this.screen.height = this.h;
-    // this.screen.calculateBounds();
     this.app.stage.addChild(this.screen);
 
     this.hui = new pixi.Container();

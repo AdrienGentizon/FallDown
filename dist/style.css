@@ -1,10 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
 body {
   width: 100%;
   margin: 1em auto;
-
-  font-family: 'Press Start 2P', cursive;
+  font-family: "Press Start 2P", cursive;
 }
 
 .app-canvas {
@@ -12,10 +10,9 @@ body {
   margin: 0 auto;
   display: flex;
   justify-content: center;
-
-  canvas {
-    border: solid 1px mediumaquamarine;
-  }
+}
+.app-canvas canvas {
+  border: solid 1px mediumaquamarine;
 }
 
 footer {
@@ -26,6 +23,6 @@ footer {
   color: grey;
   font-size: 1em;
   font-family: monospace;
-  p {
-  }
 }
+
+/*# sourceMappingURL=style.css.map */
