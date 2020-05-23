@@ -165,7 +165,6 @@ class Game {
     this.screen.name = 'screen';
     this.screen.width = this.w;
     this.screen.height = this.h;
-    // this.screen.calculateBounds();
     this.app.stage.addChild(this.screen);
 
     this.hui = new pixi.Container();
