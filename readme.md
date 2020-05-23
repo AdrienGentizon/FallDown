@@ -1,5 +1,7 @@
-**Tile:** _FALL DOWN_
-**Version:** _v0.7.5b_
+**Title:** _FALL DOWN_
+
+**Version:** _v0.9.9b_
+
 **Author:** _Adrien Gentizon_
 
 ---
@@ -9,6 +11,11 @@ This is a _TETRIS_-like game. Coded in JavaScript thanks to _PixiJS_ library.
 I am not aiming of coded it in the most clever way. Yet I try my best at least to code
 in a clear and concise way following ES6 style (as far as I know it).
 
+**Play the game:**
+I will focus on a well polished web page later. I think I will use Jekyll since it is the tool used under GitHub pages.
+Yet, you still can play around with the game [here](https://adriengentizon.github.io/FallDown/src/index.html).
+It is still a very work in progress project so you will encounter some issues for sure.
+
 **Technologies inside:**
 
 - PixiJS
@@ -17,6 +24,7 @@ in a clear and concise way following ES6 style (as far as I know it).
 - Babel
 - Sass
 - Git and Github
+- Jekyll
 
 **Assets used:**
 _(I would like to edit all of the material but for the moment I am using some from other people)_

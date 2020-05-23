@@ -64,7 +64,6 @@ class Block {
           block.sprite.y + block.sprite.height
         )
       ) {
-        // this.translateY(this._game.findValidPosition(this._position).y);
         this.prevY();
         this._isStopped = true;
         return true;
