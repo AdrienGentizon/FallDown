@@ -5,3 +5,5 @@ Highscores in WebStorage
 Controls clickable
 Collision x still not stable
 Watiting for fonts to be loaded before display
+Managing variety of blocks to increase difficulty with time
+Cursor blinking at prompt user name
