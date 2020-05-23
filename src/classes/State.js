@@ -136,10 +136,6 @@ class Play extends State {
   }
 
   update(dt) {
-    if (this._gametimeOver < 0) {
-      this.exit();
-    }
-
     // BLOCK IS FALLING
     if (this._game.movingBlock !== undefined) {
       this._game.movingBlock.moveY(this._game.speed * dt);
@@ -189,6 +185,9 @@ class Play extends State {
 
     this.hui.score.text = this._game.user.score * 25;
     this.hui.timeOver.text = Math.floor(this._game.timeOver / 10);
+    if (this._game.timeOver <= 0) {
+      this.exit();
+    }
   }
 
   exit() {
