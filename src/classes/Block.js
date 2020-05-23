@@ -43,6 +43,15 @@ class Block {
 
   // METHODS
   checkCollisionsY(block) {
+    // if (block !== this) {
+    //   if (this._sprite.y + this._sprite.height >= block.sprite.y && this._sprite.x === block.sprite.x) {
+    //     this.translateY(this._game.findValidPosition(this._position).y);
+    //     this._isStopped = true;
+    //     return true;
+    //   }
+    //   return false;
+    // }
+
     if (block !== this) {
       const vertex = new Vector(this._sprite.x + this._sprite.width / 2, this._sprite.y + this._sprite.height);
 

@@ -81,18 +81,18 @@ class Play extends State {
     super(container, game, info);
     this.hui = {
       score: (() => {
-        const hui = new pixi.Text('', FontStyle.p);
-        hui.position.set(this._container._width / 2, 0);
+        const hui = new pixi.Text('SCORE ', FontStyle.p);
+        hui.position.set((this._container._width + hui.width) / 2, 12);
         return hui;
       })(),
       userName: (() => {
-        const hui = new pixi.Text(this._game.user.name, FontStyle.p);
-        hui.position.set(0, 0);
+        const hui = new pixi.Text(`P1 ${this._game.user.name}`, FontStyle.p);
+        hui.position.set(12, 12);
         return hui;
       })(),
       timeOver: (() => {
-        const hui = new pixi.Text(this._game.timeOver, FontStyle.p);
-        hui.position.set(this._container._width - hui.width, 0);
+        const hui = new pixi.Text(`TIME ${this._game.timeOver}`, FontStyle.p);
+        hui.position.set(this._container._width - hui.width, 12);
         return hui;
       })(),
     };
@@ -136,10 +136,6 @@ class Play extends State {
   }
 
   update(dt) {
-    if (this._gametimeOver < 0) {
-      this.exit();
-    }
-
     // BLOCK IS FALLING
     if (this._game.movingBlock !== undefined) {
       this._game.movingBlock.moveY(this._game.speed * dt);
@@ -187,8 +183,13 @@ class Play extends State {
 
     this._game.timeOver -= 1;
 
-    this.hui.score.text = this._game.user.score * 25;
-    this.hui.timeOver.text = Math.floor(this._game.timeOver / 10);
+    this.hui.score.text = `SCORE ${this._game.user.score * 25}`;
+    this.hui.score.position.set((this._container._width - this.hui.score.width) / 2, 12);
+
+    this.hui.timeOver.text = `TIME ${Math.floor(this._game.timeOver / 10)}`;
+    if (this._game.timeOver <= 0) {
+      this.exit();
+    }
   }
 
   exit() {
