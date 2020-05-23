@@ -36,7 +36,7 @@ class Game {
     this.prevPosition = new Vector();
     this.rows;
     this.gpsByRow = [];
-    this.user = { name: '' };
+    this.user = { name: '', score: 0 };
     this.storage = undefined;
 
     this.makeLayers();
@@ -83,6 +83,9 @@ class Game {
         }
       }
     }
+    // upating score
+    this.user.score += this.dyingBlocks.length;
+
     // deleteing blocks from dyingBlocks
     for (const block of this.dyingBlocks) {
       block.kill();

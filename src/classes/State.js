@@ -72,13 +72,33 @@ class Instructions extends State {
   update(dt) {}
   exit() {
     this._container.removeChildren();
-    this._game.state = new Play(this._container, this._game, 'PLAYING...');
+    this._game.state = new Play(this._game.screen, this._game, 'PLAYING...');
   }
 }
 
 class Play extends State {
   constructor(container, game = undefined, info = '') {
     super(container, game, info);
+    this.hui = {
+      score: (() => {
+        const hui = new pixi.Text('', FontStyle.p);
+        hui.position.set(this._container._width / 2, 0);
+        return hui;
+      })(),
+      userName: (() => {
+        const hui = new pixi.Text(this._game.user.name, FontStyle.p);
+        hui.position.set(0, 0);
+        return hui;
+      })(),
+      timeOver: (() => {
+        const hui = new pixi.Text(this._game.timeOver, FontStyle.p);
+        hui.position.set(this._container._width - hui.width, 0);
+        return hui;
+      })(),
+    };
+    this._container.addChild(this.hui.userName);
+    this._container.addChild(this.hui.score);
+    this._container.addChild(this.hui.timeOver);
   }
 
   init() {
@@ -178,6 +198,9 @@ class Play extends State {
     }
 
     this._game.timeOver -= 1;
+
+    this.hui.score.text = this._game.user.score * 25;
+    this.hui.timeOver.text = Math.floor(this._game.timeOver / 10);
   }
 
   exit() {
