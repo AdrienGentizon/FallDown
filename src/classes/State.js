@@ -183,18 +183,6 @@ class Play extends State {
       } else {
         console.log(`blocks stopped: ${areStopped}/${this._game.staticBlocks.length}`);
       }
-
-      // this._game.moveLines(dt);
-
-      // let areStopped = 0;
-      // for (const block of this._game.staticBlocks) {
-      //   if (block.isStopped) {
-      //     areStopped += 1;
-      //   }
-      // }
-      // if (areStopped === this._game.staticBlocks.length) {
-      //   this._game.newMovingBlock();
-      // }
     }
 
     this._game.timeOver -= 1;
