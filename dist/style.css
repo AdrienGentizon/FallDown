@@ -1,0 +1,28 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+body {
+  width: 100%;
+  margin: 1em auto;
+  font-family: "Press Start 2P", cursive;
+}
+
+.app-canvas {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+}
+.app-canvas canvas {
+  border: solid 1px mediumaquamarine;
+}
+
+footer {
+  width: 100%;
+  position: fixed;
+  text-align: center;
+  bottom: 1em;
+  color: grey;
+  font-size: 1em;
+  font-family: monospace;
+}
+
+/*# sourceMappingURL=style.css.map */
