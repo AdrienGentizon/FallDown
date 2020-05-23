@@ -135,7 +135,8 @@ class Game {
     this.makeKeyboard();
 
     new Loader(this.urls, this.dispatchSprites.bind(this));
-    document.body.appendChild(this.app.view);
+    // document.body.appendChild(this.app.view);
+    document.getElementsByClassName('app-canvas')[0].appendChild(this.app.view);
 
     this.state = new State.Welcome(this.screen, this, 'FALL_DOWN GAME');
   }
