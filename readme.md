@@ -13,7 +13,7 @@ in a clear and concise way following ES6 style (as far as I know it).
 
 **Play the game:**
 I will focus on a well polished web page later. I think I will use Jekyll since it is the tool used under GitHub pages.
-Yet, you still can play around with the game [here](./src/index.html).
+Yet, you still can play around with the game [here](https://github.com/AdrienGentizon/FallDown).
 It is still a very work in progress project so you will encounter some issues for sure.
 
 **Technologies inside:**
