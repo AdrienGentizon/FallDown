@@ -8,7 +8,7 @@
 
 **Description:**
 This is a _TETRIS_-like game. Coded in JavaScript thanks to _PixiJS_ library.
-I am not aiming of coded it in the most clever way. Yet I try my best at least to code
+I am not aiming to code it in the most clever way. Yet I try my best at least to code
 in a clear and concise way following ES6 style (as far as I know it).
 
 **Play the game:**
