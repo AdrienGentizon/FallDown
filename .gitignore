@@ -1,0 +1,7 @@
+package-lock.json
+*.xcf
+*.wav
+assets/drafts/
+assets/xcf
+node_modules/
+dist/
